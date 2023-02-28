@@ -1,4 +1,4 @@
-class Card {
+export class Card {
     #data;
     #selectorTemplate;
     #element;
@@ -23,12 +23,12 @@ class Card {
         const cardLikeElement = this.#element.querySelector('.card__like')
 
         cardTitleElement.textContent = this.#data.name
-        cardImgElement.src = this.#data.img_link
+        cardImgElement.src = this.#data.image
         
-        if(!this.#data.favourite) cardLikeElement.remove()
+        if(!this.#data.favorite) cardLikeElement.remove()
 
         cardImgElement.addEventListener('click', () => {
-            this.#handleClickCatImage(this.#data.img_link)
+            this.#handleClickCatImage(this.#data.image)
         })
         return this.#element
     }
