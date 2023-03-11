@@ -10,9 +10,8 @@
     background-color: var(--bg-secondary-color);
     color: var(--text-light-color);
     outline: none;
+    cursor: pointer;
 }
-
-.
 
 .btn:hover, .btn:focus{
     background-color: var(--accent-color);

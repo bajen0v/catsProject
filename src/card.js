@@ -1,35 +1,53 @@
 export class Card {
-    #data;
-    #selectorTemplate;
-    #element;
-    #handleClickCatImage;
+  _getTemplate() {
+    const template = document
+      .querySelector(this._selectorTemplate)
+      .content.querySelector(".card");
+    return template;
+  }
 
-    #getTemplate(){
-        const template = document.querySelector(this.#selectorTemplate).content.querySelector('.card')
-        return template
-    };
+  constructor(data, selectorTemplate, handleClickCatImage, handleCatTitle) {
+    this._data = data;
+    this._selectorTemplate = selectorTemplate;
+    this._handleClickCatImage = handleClickCatImage;
+    this._handleCatTitle = handleCatTitle;
+    
+  }
 
-    constructor(data, selectorTemplate, handleClickCatImage) {
-        this.#data = data
-        this.#selectorTemplate = selectorTemplate
-        this.#handleClickCatImage = handleClickCatImage;
+  getElement() {
+    this.element = this._getTemplate().cloneNode(true);
+    this.cardTitleElement = this.element.querySelector(".card__name");
+    this.cardImgElement = this.element.querySelector(".card__image");
+    this.cardLikeElement = this.element.querySelector(".card__like");
+ 
+    if (!this._data.favorite) this.cardLikeElement.remove();
 
-    }
+    this.cardTitleElement.textContent = this._data.name;
+    this.cardImgElement.src = this._data.image;
 
-    getElement(){
-        this.#element = this.#getTemplate().cloneNode(true)
-        const cardTitleElement = this.#element.querySelector('.card__name')
-        const cardImgElement = this.#element.querySelector('.card__image')
-        const cardLikeElement = this.#element.querySelector('.card__like')
+    this.setEventListener();
+    return this.element;
+  }
 
-        cardTitleElement.textContent = this.#data.name
-        cardImgElement.src = this.#data.image
-        
-        if(!this.#data.favorite) cardLikeElement.remove()
+  getData() {
+    return this._data;
+  }
 
-        cardImgElement.addEventListener('click', () => {
-            this.#handleClickCatImage(this.#data.image)
-        })
-        return this.#element
-    }
+  getId() {
+    return this._data._id;
+  }
+
+  setData(newData) {
+    this._data = newData;
+  }
+
+  deleteView() {
+    this.element.remove();
+    this.element = null;
+  }
+
+  setEventListener() {
+    this.cardTitleElement.addEventListener("click",() => this._handleCatTitle(this));
+    this.cardImgElement.addEventListener("click", () => this._handleClickCatImage(this._data.image));
+  }
 }
