@@ -26,7 +26,7 @@ popupLogin.setEventListener();
 const popupCatInfo = new Popup("popup-cat-info");
 popupCatInfo.setEventListener()
 
-const catsInfoInstance = new CatsInfo('#cats-info-template', handleCatEditInfo, handleCatDelete)
+const catsInfoInstance = new CatsInfo('#cats-info-template', handleCatEditInfo, handleLikeCat, handleCatDelete)
 const catsInfoElement = catsInfoInstance.getElement()
 
 function serializeForm(elements) {
@@ -45,7 +45,7 @@ function serializeForm(elements) {
 }
 
 function createCat(dataCat) {
-  const newElement = new Card( dataCat, "#card-template", handleClickCatImage, handleCatTitle);
+  const newElement = new Card( dataCat, "#card-template", handleClickCatImage, handleCatTitle, handleLikeCat);
   cardsContainer.prepend(newElement.getElement());
 }
 
@@ -133,7 +133,6 @@ function handleCatTitle(cardInstance){
 }
 
 function handleCatDelete(cardInstance) {
-  console.log(cardInstance.getId())
   api.deleteByCatById(cardInstance.getId())
     .then(()=> {
       cardInstance.deleteView()
@@ -152,6 +151,18 @@ function handleCatEditInfo(cardInstance, data){
       cardInstance.updateView();
       updateLocalStorage(data, {type: 'EDIT_CAT'})
       popupCatInfo.close()
+    })
+}
+
+function handleLikeCat(data,cardInstance) {
+  const {id, rate} = data
+  api.updateCatById(id, {rate})
+    .then(()=> {
+      if (cardInstance) {
+        cardInstance.setData(data);
+        cardInstance.updateView();
+      }
+      updateLocalStorage(data, {type: 'EDIT_CAT'})
     })
 }
 

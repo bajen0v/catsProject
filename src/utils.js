@@ -16,7 +16,7 @@ export const printNumerals = (number, arr) => {
 
   export function generateRate(rate) {
     const catRate = []
-    for(let i = 1; i < 10; i++) {
+    for(let i = 1; i <= 10; i++) {
         if(i <= rate){
             catRate.push('<i class="fa-solid fa-star"></i>')
         } else if (i === Math.ceil(rate)) {

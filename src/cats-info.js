@@ -1,15 +1,24 @@
 import { generateRate, printNumerals } from "./utils.js";
 
 export class CatsInfo {
-    constructor (selectorTemplate, 
-         handleEditCatInfo, 
-        // handleLikeCat, 
+    constructor (
+        selectorTemplate, 
+        handleEditCatInfo, 
+        handleLikeCat, 
         handleDeleteCat) {
         this._selectorTemplate = selectorTemplate;
         this._handleEditCatInfo = handleEditCatInfo; 
-        // this._handleLikeCat = handleLikeCat;
+        this._handleLikeCat = handleLikeCat;
         this._handleDeleteCat = handleDeleteCat;
         this._data = {};
+    }
+
+    _updateViewLike(){
+        if(this._data.favorite) {
+            this.buttonLiked.classList.add('cat-info__favorite_active');
+        } else {
+            this.buttonLiked.classList.remove('cat-info__favorite_active');
+        }
     }
 
     setData(cardInstance) {
@@ -21,10 +30,18 @@ export class CatsInfo {
         this.catName.textContent = this._data.name;
         this.catAge.textContent = this._data.age;
         this.catId.textContent = this._data.id;
+
         this.catAgeText.textContent = printNumerals(this._data.age, ['год', 'года', 'лет']);
         this.catRate.innerHTML = generateRate(this._data.rate);
+
+        this._updateViewLike();
     }
 
+    _setLikeCat = () => {
+        this._data.favorite = !this._data.favorite;
+        this._updateViewLike();
+        this._handleLikeCat(this._data, this._cardInstance);
+    }
     _getTemplate() {
         const template = document
           .querySelector(this._selectorTemplate)
@@ -33,22 +50,22 @@ export class CatsInfo {
     }
 
     getElement() {
-        this.element = this._getTemplate().cloneNode(true)
-        this.buttonEdited = this.element.querySelector('.cat-info__edited')
-        this.buttonSaved = this.element.querySelector('.cat-info__saved')
-        this.buttonLiked = this.element.querySelector('.cat-info__favorite')
-        this.buttonDeleted = this.element.querySelector('.cat-info__deleted')
+        this.element = this._getTemplate().cloneNode(true);
+        this.buttonEdited = this.element.querySelector('.cat-info__edited');
+        this.buttonSaved = this.element.querySelector('.cat-info__saved');
+        this.buttonLiked = this.element.querySelector('.cat-info__favorite');
+        this.buttonDeleted = this.element.querySelector('.cat-info__deleted');
         
-        this.catImage = this.element.querySelector('.cat-info__image')
-        this.catId = this.element.querySelector('.cat-info__id')
-        this.catName = this.element.querySelector('.cat-info__name')
-        this.catRate = this.element.querySelector('.cat-info__rate')
-        this.catAge = this.element.querySelector('.cat-info__age-val')
-        this.catAgeText = this.element.querySelector('.cat-info__age-text')
-        this.catDesc = this.element.querySelector('.cat-info__desc')
+        this.catImage = this.element.querySelector('.cat-info__image');
+        this.catId = this.element.querySelector('.cat-info__id');
+        this.catName = this.element.querySelector('.cat-info__name');
+        this.catRate = this.element.querySelector('.cat-info__rate');
+        this.catAge = this.element.querySelector('.cat-info__age-val');
+        this.catAgeText = this.element.querySelector('.cat-info__age-text');
+        this.catDesc = this.element.querySelector('.cat-info__desc');
        
-        this.setEventListener()
-        return this.element
+        this.setEventListener();
+        return this.element;
     }
 
     _toggleContentEditable = () => {
@@ -66,14 +83,14 @@ export class CatsInfo {
         this._data.age = Number(this.catAge.textContent);
         this._data.description = this.catDesc.textContent;
 
-
         this._handleEditCatInfo(this._cardInstance, this._data)
-
+        this._handleLikeCat(this._cardInstance, this._data.favorite)
     }
 
     setEventListener(){
         this.buttonDeleted.addEventListener('click', () => this._handleDeleteCat(this._cardInstance));
-        this.buttonEdited.addEventListener('click', this._toggleContentEditable)
-        this.buttonSaved.addEventListener('click', this._savedDataCats)
+        this.buttonEdited.addEventListener('click', this._toggleContentEditable);
+        this.buttonSaved.addEventListener('click', this._savedDataCats);
+        this.buttonLiked.addEventListener('click', this._setLikeCat );
     }
 }

@@ -42,14 +42,14 @@
     font-weight: bold;
 }
 
-.cat-info__favourite {
+.cat-info__favorite {
     border: none;
     border-color: transparent;
     color: var(--text-secondary-color);
     cursor: pointer;
 }
 
-.cat-info__favourite_active {
+.cat-info__favorite_active {
     color: var(--tertiary-color)
 }
 
