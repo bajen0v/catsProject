@@ -26,7 +26,7 @@ popupLogin.setEventListener();
 const popupCatInfo = new Popup("popup-cat-info");
 popupCatInfo.setEventListener()
 
-const catsInfoInstance = new CatsInfo('#cats-info-template',handleCatDelete)
+const catsInfoInstance = new CatsInfo('#cats-info-template', handleCatEditInfo, handleCatDelete)
 const catsInfoElement = catsInfoInstance.getElement()
 
 function serializeForm(elements) {
@@ -133,9 +133,28 @@ function handleCatTitle(cardInstance){
 }
 
 function handleCatDelete(cardInstance) {
-  console.log(cardInstance)
-  // cardInstance.deleteView()
+  console.log(cardInstance.getId())
+  api.deleteByCatById(cardInstance.getId())
+    .then(()=> {
+      cardInstance.deleteView()
+      updateLocalStorage(cardInstance.getData(), {type: 'DELETE_CAT'})
+      popupCatInfo.close()
+    })
+
 }
+
+function handleCatEditInfo(cardInstance, data){
+  const {name, age, id, description} = data
+
+  api.updateCatById(id, {age, description, name})
+    .then(()=> {
+      cardInstance.setData(data);
+      cardInstance.updateView();
+      updateLocalStorage(data, {type: 'EDIT_CAT'})
+      popupCatInfo.close()
+    })
+}
+
 formLogin.addEventListener("submit", handleFormLogin);
 formCatAdd.addEventListener("submit", handleFormAddCat);
 

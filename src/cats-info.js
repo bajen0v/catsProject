@@ -1,25 +1,28 @@
 import { generateRate, printNumerals } from "./utils.js";
 
 export class CatsInfo {
-    constructor (selectorTemplate, handleEditCatInfo, handleLikeCat, handleDeleteCat) {
+    constructor (selectorTemplate, 
+         handleEditCatInfo, 
+        // handleLikeCat, 
+        handleDeleteCat) {
         this._selectorTemplate = selectorTemplate;
         this._handleEditCatInfo = handleEditCatInfo; 
-        this._handleLikeCat = handleLikeCat;
+        // this._handleLikeCat = handleLikeCat;
         this._handleDeleteCat = handleDeleteCat;
         this._data = {};
     }
 
     setData(cardInstance) {
         this._cardInstance = cardInstance;
-        this._data = this._cardInstance.getData()
+        this._data = this._cardInstance.getData();
 
-        this.catImage.src = this._data.image
-        this.catDesc.textContent = this._data.description
-        this.catName.textContent = this._data.name
-        this.catAge.textContent = this._data.age
-        this.catId.textContent = this._data.id
-        this.catAgeText.textContent = printNumerals(this._data.age, ['год', 'года', 'лет'])
-        this.catRate.innerHTML = generateRate(this._data.rate)
+        this.catImage.src = this._data.image;
+        this.catDesc.textContent = this._data.description;
+        this.catName.textContent = this._data.name;
+        this.catAge.textContent = this._data.age;
+        this.catId.textContent = this._data.id;
+        this.catAgeText.textContent = printNumerals(this._data.age, ['год', 'года', 'лет']);
+        this.catRate.innerHTML = generateRate(this._data.rate);
     }
 
     _getTemplate() {
@@ -48,7 +51,29 @@ export class CatsInfo {
         return this.element
     }
 
+    _toggleContentEditable = () => {
+        this.buttonEdited.classList.toggle('cat-info__edited_hidden');
+        this.buttonSaved.classList.toggle('cat-info__saved_hidden');
+
+        this.catDesc.contentEditable = !this.catDesc.isContentEditable;
+        this.catName.contentEditable = !this.catName.isContentEditable;
+        this.catAge.contentEditable = !this.catAge.isContentEditable;
+    }
+
+    _savedDataCats = () => {
+        this._toggleContentEditable();
+        this._data.name = this.catName.textContent;
+        this._data.age = Number(this.catAge.textContent);
+        this._data.description = this.catDesc.textContent;
+
+
+        this._handleEditCatInfo(this._cardInstance, this._data)
+
+    }
+
     setEventListener(){
-        this.buttonDeleted.addEventListener('click', this._handleDeleteCat)
+        this.buttonDeleted.addEventListener('click', () => this._handleDeleteCat(this._cardInstance));
+        this.buttonEdited.addEventListener('click', this._toggleContentEditable)
+        this.buttonSaved.addEventListener('click', this._savedDataCats)
     }
 }

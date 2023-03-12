@@ -22,9 +22,7 @@ export class Card {
  
     if (!this._data.favorite) this.cardLikeElement.remove();
 
-    this.cardTitleElement.textContent = this._data.name;
-    this.cardImgElement.src = this._data.image;
-
+    this.updateView();
     this.setEventListener();
     return this.element;
   }
@@ -34,11 +32,16 @@ export class Card {
   }
 
   getId() {
-    return this._data._id;
+    return this._data.id;
   }
 
   setData(newData) {
     this._data = newData;
+  }
+
+  updateView(){
+    this.cardTitleElement.textContent = this._data.name;
+    this.cardImgElement.src = this._data.image;
   }
 
   deleteView() {
